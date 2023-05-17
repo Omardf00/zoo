@@ -1,0 +1,188 @@
+openapi: 3.0.1
+info:
+  title: Zoo Api
+  description: Api designed to manage animals in the zoo
+  contact:
+    name: Omar
+    url: https://github.com/Omardf00
+    email: omar.dominguez.fuentes@atos.net
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+servers:
+- url: http://localhost:8080/api/v1/animal
+  description: Localhost Server
+tags:
+- name: Animal Services
+  description: A list of services designed for the complete CRUD of the animals
+paths:
+  /api/v1/animal:
+    get:
+      tags:
+      - Animal Services
+      description: Returns a complete list of all the animals in the database
+      operationId: getAllAnimals
+      responses:
+        "200":
+          description: List returned
+          content:
+            '*/*':
+              schema:
+                type: object
+        "500":
+          description: Error with the service
+          content:
+            '*/*':
+              schema:
+                type: object
+    put:
+      tags:
+      - Animal Services
+      description: Updates an animal in the database
+      operationId: updateAnimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Animal'
+        required: true
+      responses:
+        "200":
+          description: Animal updated
+          content:
+            '*/*':
+              schema:
+                type: object
+        "404":
+          description: Animal not found
+          content:
+            '*/*':
+              schema:
+                type: object
+        "500":
+          description: Error with the service
+          content:
+            '*/*':
+              schema:
+                type: object
+        "400":
+          description: Invalid request
+          content:
+            '*/*':
+              schema:
+                type: object
+    post:
+      tags:
+      - Animal Services
+      description: Inserts a new animal in the data base
+      operationId: saveAnimal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Animal'
+        required: true
+      responses:
+        "201":
+          description: Animal created
+          content:
+            '*/*':
+              schema:
+                type: object
+        "500":
+          description: Error with the service
+          content:
+            '*/*':
+              schema:
+                type: object
+        "400":
+          description: Invalid request
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/animal/{id}:
+    get:
+      tags:
+      - Animal Services
+      description: Returns an animal by its id
+      operationId: getAnimalById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "404":
+          description: Animal not found
+          content:
+            '*/*':
+              schema:
+                type: object
+        "200":
+          description: Animal returned
+          content:
+            '*/*':
+              schema:
+                type: object
+        "500":
+          description: Error with the service
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+      - Animal Services
+      description: Removes an animal from the database by its id
+      operationId: deleteAnimal
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Animal deleted
+          content:
+            '*/*':
+              schema:
+                type: object
+        "404":
+          description: Animal not found
+          content:
+            '*/*':
+              schema:
+                type: object
+        "500":
+          description: Error with the service
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    Animal:
+      required:
+      - commonName
+      - family
+      - scientificName
+      - specie
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        commonName:
+          type: string
+        scientificName:
+          type: string
+        specie:
+          type: string
+        family:
+          type: string
