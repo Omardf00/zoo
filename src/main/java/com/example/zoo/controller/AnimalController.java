@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/animal")
-@CrossOrigin("http://localhost:8888")
+@CrossOrigin(origins = {"http://localhost:4200"})
 @Tag(name = "Animal Services", description = "A list of services designed for the complete CRUD of the animals")
 public class AnimalController {
 
@@ -74,6 +74,29 @@ public class AnimalController {
         }
 
         return new ResponseEntity<>(animal, HttpStatus.OK);
+    }
+
+    @GetMapping("/findByName")
+    @Operation(description = "Returns an animal by its name")
+    @ApiResponse(responseCode = "200", description = "Animal returned")
+    @ApiResponse(responseCode = "404", description = "Animal not found")
+    @ApiResponse(responseCode = "500", description = "Error with the service")
+    public ResponseEntity<?> getAnimalByName(@RequestParam(name = "query") String name){
+
+        List<Animal> animals;
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            animals = animalService.getAnimalByName(name);
+        } catch (DataAccessException e) {
+            response.put("error", "There was an error trying to access the data base");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            response.put("error", "The service is not available at the moment");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(animals, HttpStatus.OK);
     }
 
     @PostMapping

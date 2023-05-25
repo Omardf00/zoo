@@ -24,6 +24,11 @@ public class AnimalServiceImpl implements AnimalService{
     }
 
     @Override
+    public List<Animal> getAnimalByName(String name) {
+        return animalDao.findByCommonName(name);
+    }
+
+    @Override
     public Animal saveAnimal(Animal animal) {
         return animalDao.save(animal);
     }
